@@ -4,17 +4,21 @@ pipeline{
 
     stages{
 
-        stage('Run test'){
+        stage('Start the Grid'){
             steps{
-                sh "docker compose up"
+                sh "docker compose -f grid.yaml up -d"
             }
         }
 
-        stage('Bring Grid down | End Test'){
+        stage('Run the Tests'){
             steps{
-                sh "docker compose down"
+                sh "docker compose -f test-suits.yaml up"
             }
         }
     }
-
+    post {
+        always{
+        sh "docker compose -f grid.yaml up -d"
+        }
+    }
 }
